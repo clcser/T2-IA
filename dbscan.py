@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from math import sqrt
+from math import trunc
 
 data = np.array([[2, 10], [2, 5], [8, 4], [5, 8], [7, 5], [6, 4], [1, 2], [4, 9]])
 
@@ -24,7 +25,7 @@ color = np.array([
 # min_points = minimo numero de vecinos para considerarlo core
 
 # DBSCAN
-eps = 2.0 #sqrt(10)
+eps = sqrt(10)
 min_points = 2
 n = len(data)
 assigned = np.full(n, False)
@@ -81,7 +82,7 @@ fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.set_xlim([0, 9])
 ax.set_ylim([0, 11])
-plt.title(f"DBSCAN: eps={eps}, min_points={min_points}")
+plt.title(f"DBSCAN: eps={trunc(eps*100)/100}, min_points={min_points}")
 
 for j, cluster in enumerate(clusters):
     arr = np.array([data[i] for i in cluster])
@@ -92,7 +93,7 @@ for j, cluster in enumerate(clusters):
         if pt in label:
             ax.text(x[l] + 0.1, y[l] + 0.2, label[pt])
 
-    plt.scatter(x, y, c=color[j], edgecolors='black', linewidth=0.5, s=150)
+    plt.scatter(x, y, c=color[j], edgecolors='black', linewidth=0.5, s=100)
 
 # dibujar outliers
 if outliers:
@@ -104,6 +105,6 @@ if outliers:
         if pt in label:
             ax.text(x[l] + 0.1, y[l] + 0.2, label[pt])
 
-    plt.scatter(x, y, c="gray", edgecolors='black', linewidth=0.5, s=150, label='Outliers')
+    plt.scatter(x, y, c="gray", edgecolors='black', linewidth=0.5, s=100, label='Outliers')
 
 plt.show()
