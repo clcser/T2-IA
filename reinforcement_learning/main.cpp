@@ -7,7 +7,7 @@
 #include <fstream>
 
 #ifndef ALGORITHM
-#define ALGORITHM 1  // Default to Q-learning
+#define ALGORITHM 1 
 #endif
 
 int algorithm = ALGORITHM;
