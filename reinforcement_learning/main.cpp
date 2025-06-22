@@ -6,6 +6,13 @@
 #include <iostream>
 #include <fstream>
 
+#ifndef ALGORITHM
+#define ALGORITHM 1  // Default to Q-learning
+#endif
+
+int algorithm = ALGORITHM;
+float DELTA = 1e-4;
+
 using namespace std;
 int height_grid, width_grid, action_taken, action_taken2, current_episode;
 int maxA[100][100], blocked[100][100];
@@ -18,12 +25,12 @@ int init_x_pos, init_y_pos, goalx, goaly, x_pos, y_pos, prev_x_pos, prev_y_pos,
 // Setting value for learning parameters
 int action_sel = 2;   // 1 is greedy, 2 is e-greedy
 int environment = 2;  // 1 is small grid, 2 is Cliff walking
-int algorithm = 1;    // 1 is Q-learning, 2 is Sarsa
-int stochastic_actions = 0;// 0 is deterministic actions, 1 for stochastic actions
-int num_episodes = 3000;   // total learning episodes
+//int algorithm = 1;    // 1 is Q-learning, 2 is Sarsa
+int stochastic_actions = 1;// 0 is deterministic actions, 1 for stochastic actions
+int num_episodes = 2500;   // total learning episodes
 float learn_rate = 0.1;    // how much the agent weights each new sample
 float disc_factor = 0.9;  // how much the agent weights future rewards
-float exp_rate = 0.1;      // how much the agent explores
+float exp_rate = 0.99;      // how much the agent explores
 int max_steps = 1000;
 ///////////////
 
@@ -94,7 +101,8 @@ int action_selection() {
             return highest.second;
         }
         else {
-            cout << "!\n";
+            cout << exp_rate << "\n";
+            exp_rate -= DELTA;
             return rand()%4;
         } 
     }
@@ -107,8 +115,6 @@ void move(int action) {
     prev_x_pos = x_pos;
     prev_y_pos = y_pos;
 
-    // Assuming a .8 prob that the action will perform as intended, 0.1 prob. of
-    // moving instead to the right, 0.1 prob of moving instead to the left
     if(stochastic_actions) {
         int choice = rand()%10;
         if(choice == 0) { // Moverse a la derecha
@@ -167,7 +173,6 @@ void update_q_prev_state_sarsa() {
 }
 
 void Qlearning() {
-    // Follow the  steps in th e pseudocode in the slides
     action_taken = action_selection();
     move(action_taken);
     
@@ -216,6 +221,7 @@ int main(int argc, char* argv[]) {
     srand(time(NULL));
 
     reward_output.open("Rewards.txt");
+    
     Initialize_environment();
     
     Multi_print_grid();
@@ -250,7 +256,7 @@ int main(int argc, char* argv[]) {
         finalrw[i] = cum_reward;
         reward_output << " Total reward obtained: " << finalrw[i] << "\n";
     }
-    
+    cout << algorithm << "\n";
     reward_output.close();
 
     return 0;

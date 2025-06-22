@@ -25,7 +25,7 @@ color = np.array([
 # min_points = minimo numero de vecinos para considerarlo core
 
 # DBSCAN
-eps = sqrt(10)
+eps = 2 # sqrt(10)
 min_points = 2
 n = len(data)
 assigned = np.full(n, False)
